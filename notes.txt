@@ -1,0 +1,7 @@
+Basic changes:-
+One navigation format is enough after logged in, either sidebar or top navigation. - Done
+In student logged in view, we don't need profile in sidebar navigation. As it is already in dropdown menu in top navigation. - Done
+Home page and dashboard are same, so when logged in, the home page should redirect to dashboard. The dashboard should have a welcome message and quick links to important sections. We don't need a Dashboard navigation when not logged in, as the dashboard is only accessible after logging in.
+
+Styling changes:-
+We have to change the color scheme and font style, because it is easily identifiable as AI.
