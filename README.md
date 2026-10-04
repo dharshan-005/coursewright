@@ -1,122 +1,219 @@
-# Learning Management System
+# Full-Stack Online Learning Management System
 
-A Full-Stack Online Learning Management System — a 4-member college Major
-Project. Each part of the stack lives in its own top-level folder so it's
-clear who owns what.
+A web-based learning platform where users can register, browse courses, enroll, access learning materials, track progress, and submit assignments — with role-based dashboards for students, instructors, and admins.
+
+**Live:** [coursewright1.vercel.app](https://coursewright1.vercel.app/) · **API:** [coursewright.onrender.com](https://coursewright.onrender.com)
+
+## Team
+
+| Name | Responsibility |
+|---|---|
+| Cheguri Sathyanand Reddy | Frontend UI/UX & Responsive Design |
+| Dharshan V K | Database & Backend Integration (Courses, Lessons, Enrollments, Assignments, Submissions, Progress, API) |
+| M R Keerthi Madhavi | Authentication, Dashboard & Application Integration |
+
+## Features
+
+**Authentication & Roles**
+- Registration, login, logout, password change
+- Role-based access: Student, Instructor, Admin
+- JWT-based sessions; tokens are invalidated after a password change or if the account is deactivated
+
+**Course Management**
+- Browse, search, and filter courses by category
+- Course details with instructor and lesson count
+- Enroll / unenroll
+- Instructors manage their own courses; admins manage all courses
+
+**Learning Module**
+- View enrolled courses
+- Access lesson content, mark lessons as completed
+- Per-course progress tracking
+
+**Assignment Module**
+- Create, view, and submit assignments
+- Submission status tracking (Pending / Submitted / Graded)
+- Deadline enforcement — submissions are rejected after the due date
+- Instructors/admins grade submissions
+
+**Dashboards**
+- **Student:** enrolled courses, course progress, pending assignments, completed courses, recent activity
+- **Instructor:** own courses, lessons, assignments, and submissions to grade
+- **Admin:** manage users, courses, assignments, and view all enrollments
+
+**Responsive Frontend**
+- Works across desktop, tablet, and mobile, with a collapsible sidebar/drawer navigation
+
+## Tech Stack
+
+**Frontend:** React (Vite), React Router, Context API (`AuthContext`, `DataContext`), Axios, custom CSS
+
+**Backend:** Node.js, Express, MongoDB with Mongoose, JWT (`jsonwebtoken`), bcrypt.js, `express-rate-limit`
+
+**Deployment:** Frontend on Vercel (`vercel.json`); backend on [Render/Railway/your host — fill in]
+
+## Project Structure
 
 ```
-learning-management-system/
-├── frontend/     React UI — built and maintained here (see frontend/README.md)
-├── backend/      Node.js/Express API, database, auth — to be added by teammates
-└── README.md     This file
+backend/
+├── config/
+│   └── db.js                     # MongoDB connection
+├── controllers/
+│   ├── assignmentController.js
+│   ├── authController.js
+│   ├── courseController.js
+│   ├── dashboardController.js    # aggregated stats per role
+│   ├── enrollmentController.js
+│   ├── lessonController.js
+│   ├── progressController.js
+│   ├── submissionController.js
+│   └── userController.js
+├── middleware/
+│   ├── auth.js                   # protect, authorize
+│   └── errorHandler.js
+├── models/
+│   ├── Assignment.js
+│   ├── Course.js
+│   ├── Enrollment.js
+│   ├── Lesson.js
+│   ├── Progress.js
+│   ├── Submission.js
+│   └── User.js
+├── routes/
+│   ├── assignmentRoutes.js
+│   ├── authRoutes.js
+│   ├── courseRoutes.js
+│   ├── dashboardRoutes.js
+│   ├── enrollmentRoutes.js
+│   ├── lessonRoutes.js
+│   ├── progressRoutes.js
+│   ├── submissionRoutes.js
+│   └── userRoutes.js
+├── scripts/
+│   ├── seedAdmin.js               # creates the first admin account
+│   ├── seedAssignments.js
+│   └── seedCourses.js
+├── utils/
+│   ├── access.js                  # canAccessCourse
+│   ├── asyncHandler.js
+│   ├── http.js                    # ApiError, validators, sendAuthResponse
+│   ├── ownership.js                # isCourseOwner
+│   └── progress.js                 # calcProgress
+├── .gitignore
+├── app.js                          # Express app (middleware, routes)
+├── server.js                       # starts the HTTP server
+└── package.json
+
+frontend/
+├── src/
+│   ├── api/                        # one file per resource (axios wrappers)
+│   ├── components/
+│   │   ├── AdminNavbar.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── DashboardLayout.jsx
+│   │   ├── PublicLayout.jsx
+│   │   ├── RouteGuards.jsx         # role-based route protection
+│   │   ├── CourseCard.jsx
+│   │   ├── ProgressBar.jsx
+│   │   ├── StatCard.jsx
+│   │   ├── StatusBadge.jsx
+│   │   ├── Modal.jsx
+│   │   └── Footer.jsx
+│   ├── context/
+│   │   ├── AuthContext.jsx
+│   │   └── DataContext.jsx
+│   ├── pages/
+│   │   ├── Home.jsx, Login.jsx, Register.jsx, NotFound.jsx
+│   │   ├── Courses.jsx, CourseDetails.jsx, MyCourses.jsx, Learning.jsx
+│   │   ├── Assignments.jsx, Profile.jsx
+│   │   ├── StudentDashboard.jsx, InstructorDashboard.jsx, AdminDashboard.jsx
+│   │   └── ManageCourses.jsx, ManageLessons.jsx, ManageAssignments.jsx, ManageUsers.jsx
+│   ├── utils/
+│   │   └── dashboardPath.js        # resolves the right dashboard route per role
+│   ├── App.jsx, main.jsx, index.css
+├── vercel.json
+├── vite.config.js
+└── package.json
 ```
 
-## Who owns what
+## Getting Started
 
-- **`frontend/`** — Frontend UI/UX & Responsive Design. A complete React app
-  (Vite + React Router) with all 15 pages, mock data, and a mock API layer in
-  `frontend/src/api/` ready for the backend to plug into. Full details, setup
-  steps, and design notes are in `frontend/README.md`.
-- **`backend/`** — Not included here. Whoever owns the backend should add a
-  `backend/` folder at this same level with the Node.js/Express server,
-  database models, and JWT auth. The mock functions in `frontend/src/api/`
-  each have a comment showing exactly what shape of response they expect.
+### Prerequisites
+- Node.js (v18+)
+- A MongoDB instance (local or Atlas)
 
-## Getting the frontend running
+### 1. Install dependencies
 
-```powershell
+```bash
+cd backend && npm install
+cd ../frontend && npm install
+```
+
+### 2. Environment variables
+
+`backend/.env`:
+```
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+AUTH_RATE_LIMIT=20
+ALLOW_ADMIN_SIGNUP=false
+```
+
+`frontend/.env` (if the API base URL is configurable):
+```
+VITE_API_URL=http://localhost:5000/api
+```
+
+### 3. Create the first admin account
+
+Registration defaults every account to `student`. Run the seed script to create an admin without needing `ALLOW_ADMIN_SIGNUP`:
+
+```bash
+cd backend
+node scripts/seedAdmin.js
+```
+
+Optionally seed sample data to test against:
+```bash
+node scripts/seedCourses.js
+node scripts/seedAssignments.js
+```
+
+### 4. Run the app
+
+```bash
+# backend
+cd backend
+npm run dev        # http://localhost:5000
+
+# frontend (separate terminal)
 cd frontend
-npm install
-npm run dev
+npm run dev         # http://localhost:5173
 ```
 
-See `frontend/README.md` for the full breakdown of pages, components, and how
-to wire up real backend endpoints once they exist.
+## API Overview
 
-## Git & GitHub workflow (Windows PowerShell)
+| Resource | Base route | Notes |
+|---|---|---|
+| Auth | `/api/auth` | register, login, logout, me, change-password |
+| Users | `/api/users` | admin-only user management |
+| Courses | `/api/courses` | public browse/search; create/update/delete restricted to the owning instructor or admin |
+| Lessons | `/api/lessons` | enrolled students, the owning instructor, or admin |
+| Enrollments | `/api/enrollments` | enroll/unenroll, view own enrollments; admin/instructor view all for their courses |
+| Assignments | `/api/assignments` | view, submit; create/update/delete restricted to owning instructor or admin |
+| Submissions | `/api/submissions` | submit, view own; instructor/admin grade |
+| Progress | `/api/progress` | mark lessons complete, view per-course progress |
+| Dashboard | `/api/dashboard` | aggregated stats per role (student/instructor/admin) |
 
-Run these commands from this folder (`learning-management-system`), one level
-above `frontend/`, so the whole project — frontend and backend together —
-lives in a single repository.
+All protected routes require `Authorization: Bearer <token>`.
 
-### 1. Initialize Git in the project
+## Deployment
 
-```powershell
-git init
-git add .
-git commit -m "Initial commit: frontend UI structure"
-```
+- **Frontend:** [https://coursewright1.vercel.app/](https://coursewright1.vercel.app/) (Vercel)
+- **Backend:** [https://coursewright.onrender.com](https://coursewright.onrender.com) (Render)
+- **Database:** MongoDB Atlas
 
-### 2. Create a GitHub repository
+## Authors
 
-1. Go to [github.com/new](https://github.com/new).
-2. Name it (e.g. `learning-management-system`), choose Public or Private, and
-   **do not** initialize with a README, .gitignore, or license (you already
-   have them).
-3. Click **Create repository**.
-
-### 3. Connect your local project to GitHub
-
-Copy the URL GitHub shows you, then run:
-
-```powershell
-git remote add origin https://github.com/<your-username>/<your-repo>.git
-git branch -M main
-```
-
-### 4. Push the project
-
-```powershell
-git push -u origin main
-```
-
-### 5. Create a frontend branch
-
-If your team wants each part of the stack developed on its own branch before
-merging into `main`:
-
-```powershell
-git checkout -b frontend
-git push -u origin frontend
-```
-
-Your teammate building the backend would do the same with `git checkout -b
-backend` in their own clone, and add their code under a `backend/` folder.
-
-### 6. How teammates clone the repository
-
-```powershell
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>/frontend
-npm install
-```
-
-### 7. How teammates create their own branches
-
-```powershell
-git checkout -b backend-api
-# or
-git checkout -b feature/login-endpoint
-```
-
-### 8. How to pull the latest changes
-
-Before starting work each day:
-
-```powershell
-git checkout main
-git pull origin main
-```
-
-### 9. How to create and merge pull requests
-
-1. Push your branch: `git push -u origin <branch-name>`
-2. On GitHub, open the repository and click **Compare & pull request**.
-3. Set the base branch (usually `main`) and the compare branch (your feature
-   branch), add a short description, and click **Create pull request**.
-4. Ask a teammate to review; once approved, click **Merge pull request**.
-5. Back in PowerShell, update your local `main`:
-   ```powershell
-   git checkout main
-   git pull origin main
-   ```
+Cheguri Sathyanand Reddy, Dharshan V K, M R Keerthi Madhavi
